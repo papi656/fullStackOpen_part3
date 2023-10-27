@@ -42,9 +42,9 @@ let contacts = [
     }
 ]
 
-app.get('/', (request, response) =>{
-    response.send('<h3>Go to /api/persons</h3>')
-  })
+// app.get('/', (request, response) =>{
+//     response.send('<h3>Go to /api/persons</h3>')
+//   })
 
 app.get('/api/persons', (request, response) =>{
     response.json(contacts)
@@ -60,9 +60,10 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.post('/api/persons', (request, response) => {
-    const multiplier = 1000000
-    const rand_id = Math.floor(Math.random() * multiplier)
+    // const multiplier = 1000000
+    // const rand_id = Math.floor(Math.random() * multiplier)
     const body = request.body
+    console.log(request.method)
 
     if(!body.name || !body.number){
         return response.status(400).json({
@@ -78,7 +79,8 @@ app.post('/api/persons', (request, response) => {
     }
 
     const contactEntry = {
-        id: rand_id,
+        // id: rand_id,
+        id: body.id,
         name: body.name,
         number: body.number,
     }
@@ -87,6 +89,20 @@ app.post('/api/persons', (request, response) => {
 
     response.json(contactEntry)
 })
+
+// app.put('/api/persons/:id', (request, response) => {
+//     const id = Number(request.params.id)
+//     const body = request.body
+
+//     contacts = contacts.map(contact => {
+//         if(contact.id === id){
+//             contact.number = body.number
+//         }
+//         return contact
+//     })
+
+//     response.status(204).end()
+// })
 
 app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
