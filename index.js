@@ -1,9 +1,11 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 
 const app = express()
 
 app.use(express.json())
+app.use(cors())
 // app.use(morgan('tiny'))
 
 morgan.token('text', function getText(req){
@@ -35,7 +37,7 @@ let contacts = [
     { 
       "id": 4,
       "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
+      "number": "39-23-6423"
     }
 ]
 
