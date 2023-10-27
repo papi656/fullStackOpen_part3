@@ -41,6 +41,10 @@ let contacts = [
     }
 ]
 
+app.get('/', (request, response) =>{
+    response.send('<h3>Go to /api/persons</h3>')
+  })
+
 app.get('/api/persons', (request, response) =>{
     response.json(contacts)
 })
@@ -99,7 +103,7 @@ app.get('/info', (request, response) => {
                     <p>${current_time}</p>`)
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
