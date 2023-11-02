@@ -21,11 +21,15 @@ morgan.token('text', function getText(req){
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :text'))
 
 const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
+    // console.error(error.message)
   
     if (error.name === 'CastError') {
       return response.status(400).send({ error: 'malformatted id' })
     } 
+    else if(error.name == 'ValidationError'){
+        // console.log(error)
+        return response.status(400).send({error: 'Name length < 3 or number not in correct format'})
+    }
   
     next(error)
   }
@@ -88,12 +92,12 @@ app.get('/api/persons/:id', (request, response, next) => {
     //     response.status(404).end()
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     // const multiplier = 1000000
     // const rand_id = Math.floor(Math.random() * multiplier)
     const body = request.body
     // console.log(request.method)
-    console.log(body)
+    // console.log(body)
 
     if(!body.name || !body.number){
         return response.status(400).json({
@@ -118,6 +122,7 @@ app.post('/api/persons', (request, response) => {
     contactEntry.save().then(savedContact =>{
         response.json(savedContact)
     })
+    .catch(error => next(error))
     // contacts = contacts.concat(contactEntry)
 
     // response.json(contactEntry)
@@ -132,7 +137,7 @@ app.put('/api/persons/:id', (request, response, next) => {
         number: body.number
     }
 
-    Entry.findByIdAndUpdate(request.params.id, contact, {new: true})
+    Entry.findByIdAndUpdate(request.params.id, contact, {new: true, runValidators: true, context: 'query'})
         .then(updatedContact => {
             response.json(updatedContact)
         })
